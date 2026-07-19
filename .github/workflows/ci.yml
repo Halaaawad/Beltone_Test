@@ -1,24 +1,24 @@
-name: Java CI
+name: Docker CI
 
 on:
   push:
     branches: [ main ]
-
   pull_request:
     branches: [ main ]
 
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
+      - name: Start containers
+        run: docker compose up -d
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Show running containers
+        run: docker ps
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
