@@ -11,14 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout latest code
+        uses: actions/checkout@v4
 
-      - name: Start containers
-        run: docker compose up -d
+      - name: Show Docker version
+        run: |
+          docker --version
+          docker compose version
 
-      - name: Show running containers
+      - name: Stop existing containers
+        run: docker compose down || true
+
+      - name: Build and start containers
+        run: docker compose up -d --build
+
+      - name: List running containers
         run: docker ps
 
-      - name: Stop containers
+      - name: Show container logs
+        run: docker compose logs
+
+      - name: Stop and remove containers
         if: always()
         run: docker compose down
